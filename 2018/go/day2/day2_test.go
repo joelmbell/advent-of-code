@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestDay2_1(t *testing.T) {
+func TestPart1(t *testing.T) {
 
 	tests := []struct {
 		input  []string
@@ -14,14 +14,14 @@ func TestDay2_1(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := day2_01(test.input)
+		result := part1(test.input)
 		if result != test.output {
 			t.Fatalf("%v != %v -- for case: %v", result, test.output, test.input)
 		}
 	}
 }
 
-func TestDay2_2(t *testing.T) {
+func TestPart2(t *testing.T) {
 
 	tests := []struct {
 		input  []string
@@ -31,15 +31,23 @@ func TestDay2_2(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := day2_02(test.input)
+		result := part2(test.input)
 		if result != test.output {
 			t.Fatalf("%v != %v -- for case: %v", result, test.output, test.input)
 		}
 	}
 }
 
-func TestDay2(t *testing.T) {
-	result := Day2()
+func TestPart1WithInput(t *testing.T) {
+	result := Part1WithInput()
+
+	if result != 3952 {
+		t.Errorf("Failed: result should be %v", result)
+	}
+}
+
+func TestPart2WithInput(t *testing.T) {
+	result := Part2WithInput()
 
 	if result != "vtnikorkulbfejvyznqgdxpaw" {
 		t.Errorf("Failed: result should be %v", result)

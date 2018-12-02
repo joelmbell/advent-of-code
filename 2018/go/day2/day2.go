@@ -25,7 +25,7 @@ func loadData(filename string) []string {
 	return result
 }
 
-func day2_01(input []string) int {
+func part1(input []string) int {
 
 	var dupesCount int
 	var triplicatesCount int
@@ -62,7 +62,7 @@ func day2_01(input []string) int {
 	return dupesCount * triplicatesCount
 }
 
-func day2_02(input []string) string {
+func part2(input []string) string {
 
 	wordLength := len(input[0])
 
@@ -87,7 +87,14 @@ func day2_02(input []string) string {
 	return ""
 }
 
-func Day2() string {
+// Part1WithInput Solve the part-1 challenge with real data.
+func Part1WithInput() int {
 	input := loadData("input.txt")
-	return day2_02(input)
+	return part1(input)
+}
+
+// Part2WithInput Solve the part-2 challenge with real data.
+func Part2WithInput() string {
+	input := loadData("input.txt")
+	return part2(input)
 }
