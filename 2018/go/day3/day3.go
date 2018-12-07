@@ -87,24 +87,22 @@ func loadData(filename string) []string {
 }
 
 func Part1(input []string) int {
-
 	store := make(map[string]int)
+	var result int
+
 	for _, item := range input {
 		claim := createClaim(item)
 		claimStore := claim.Frame.writeFrame()
 		for k, _ := range claimStore {
 			if _, ok := store[k]; ok {
-				store[k] = store[k] + 1
+				newVal := store[k] + 1
+				store[k] = newVal
+				if newVal == 2 {
+					result++
+				}
 			} else {
 				store[k] = 1
 			}
-		}
-	}
-
-	var result int
-	for k, _ := range store {
-		if store[k] > 1 {
-			result++
 		}
 	}
 
