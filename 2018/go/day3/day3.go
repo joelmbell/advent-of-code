@@ -2,13 +2,13 @@ package day3
 
 import (
 	"bufio"
-	// "fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 )
 
+// Point models an x,y coordinate
 type Point struct {
 	X int
 	Y int
@@ -26,28 +26,36 @@ func (p *Point) relativePoint(toPoint Point) Point {
 	return Point{X: newX, Y: newY}
 }
 
+// Frame models the data to make a rectangle
 type Frame struct {
 	Point  Point
 	Width  int
 	Height int
 }
 
-func (f *Frame) writeFrame() map[string]int {
-	store := make(map[string]int)
-	for y := 0; y < f.Height; y++ {
-		for x := 0; x < f.Width; x++ {
+// Value models the data at each point
+type Value struct {
+	ID    string
+	Count int
+}
+
+// Claim models a pice of claim data
+type Claim struct {
+	ID    string
+	Frame Frame
+}
+
+func (c *Claim) writeFrame() map[string]Value {
+	store := make(map[string]Value)
+	for y := 0; y < c.Frame.Height; y++ {
+		for x := 0; x < c.Frame.Width; x++ {
 			point := Point{X: x, Y: y}
-			relativePoint := f.Point.relativePoint(point)
-			store[relativePoint.hash()] = 1
+			relativePoint := c.Frame.Point.relativePoint(point)
+			store[relativePoint.hash()] = Value{ID: c.ID, Count: 1}
 		}
 	}
 
 	return store
-}
-
-type Claim struct {
-	ID    string
-	Frame Frame
 }
 
 func createClaim(input string) Claim {
@@ -86,30 +94,69 @@ func loadData(filename string) []string {
 	return result
 }
 
+// Part1 solves part one with an arbitrary input
 func Part1(input []string) int {
-	store := make(map[string]int)
+	store := make(map[string]Value)
 	var result int
 
 	for _, item := range input {
 		claim := createClaim(item)
-		claimStore := claim.Frame.writeFrame()
-		for k, _ := range claimStore {
+		claimStore := claim.writeFrame()
+		for k, v := range claimStore {
 			if _, ok := store[k]; ok {
-				newVal := store[k] + 1
-				store[k] = newVal
-				if newVal == 2 {
+				newCount := store[k].Count + 1
+				store[k] = Value{ID: store[k].ID, Count: newCount}
+				if newCount == 2 {
 					result++
 				}
 			} else {
-				store[k] = 1
+				store[k] = v
 			}
 		}
 	}
-
 	return result
 }
 
+// Part2 solves part 2
+func Part2(input []string) string {
+
+	store := make(map[string]Value)
+	results := make(map[string]bool)
+
+	for _, item := range input {
+		claim := createClaim(item)
+		var overlaps bool
+		for k, v := range claim.writeFrame() {
+			if _, ok := store[k]; ok {
+				newCount := store[k].Count + 1
+				store[k] = Value{ID: store[k].ID, Count: newCount}
+				overlaps = true
+			} else {
+				store[k] = v
+			}
+
+			results[v.ID] = overlaps
+			results[store[k].ID] = overlaps
+		}
+	}
+
+	for k, v := range results {
+		if v == false {
+			return k
+		}
+	}
+
+	return "unknown"
+}
+
+// Part1WithInput solves part 1
 func Part1WithInput() int {
 	data := loadData("input.txt")
 	return Part1(data)
+}
+
+// Part2WithInput solves part 2
+func Part2WithInput() string {
+	data := loadData("input.txt")
+	return Part2(data)
 }
