@@ -2,19 +2,6 @@
 
 import Foundation
 
-/**
- Fuel required to launch a given module is based on its mass. Specifically, to find the fuel required for a module, take its mass, divide by three, round down, and subtract 2.
-
- For a mass of 12, divide by 3 and round down to get 4, then subtract 2 to get 2.
- For a mass of 14, dividing by 3 and rounding down still yields 4, so the fuel required is also 2.
- For a mass of 1969, the fuel required is 654.
- For a mass of 100756, the fuel required is 33583.
- */
-
-/**
- What is the sum of the fuel requirements for all of the modules on your spacecraft?
- */
-
 struct FileLoader {
     enum Err: Error {
         case loadError
@@ -31,76 +18,51 @@ struct FileLoader {
     }
 }
 
-struct Day1Part1Solution {
+struct Day1Solver {
+    typealias FuelConverter = (Int) -> Int
+
+    let converter: FuelConverter
+    init(converter: @escaping FuelConverter) {
+        self.converter = converter
+    }
+
     func solve(data: [Int]) -> Int {
         return data.reduce(0) { (acc, next) -> Int in
-            return acc + fuel(for: next)
+            return acc + self.converter(next)
         }
     }
+}
 
-    private func fuel(for mass: Int) -> Int {
-        return max(Int(Float(mass) / 3.0) - 2, 0)
+func part1Fuel(to mass: Int) -> Int {
+    return Int(Float(mass) / 3.0) - 2
+}
+
+func part2Fuel(to mass: Int) -> Int {
+    let calc = part1Fuel(to: mass)
+    guard calc > 0 else {
+        return 0
     }
+    return calc + part2Fuel(to: calc)
 }
 
-func solvePart1() {
-    let part1Solver = Day1Part1Solution()
+let data = try! FileLoader()
+    .loadFile(named: "day1Input")
+    .compactMap { Int($0) }
 
-    // Tests
-    part1Solver.solve(data: [12]) == 2
-    part1Solver.solve(data: [14]) == 2
-    part1Solver.solve(data: [1969]) == 654
-    part1Solver.solve(data: [100756]) == 33583
-
-
-    let data = try! FileLoader()
-        .loadFile(named: "day1Input")
-        .compactMap { Int($0) }
-    print("Part 1 Solution: \(part1Solver.solve(data: data))")
-}
+// Part 1
+let part1Solver = Day1Solver(converter: part1Fuel(to:))
+part1Solver.solve(data: [12]) == 2
+part1Solver.solve(data: [14]) == 2
+part1Solver.solve(data: [1969]) == 654
+part1Solver.solve(data: [100756]) == 33583
+part1Solver.solve(data: data) == 3372756
+print("Part 1 Solution: \(part1Solver.solve(data: data))")
 
 
-
-// PART 2
-
-struct Day1Part2Solution {
-    func solve(data: [Int]) -> Int {
-        return data.reduce(0) { (acc, next) -> Int in
-            return acc + fuel(for: next)
-        }
-    }
-
-    private func fuel(for mass: Int) -> Int {
-        let calc = Int(Float(mass) / 3.0) - 2
-        let result = max(calc, 0)
-        var acc: Int = result
-        if result == 0 {
-            return acc
-        } else {
-            acc += fuel(for: result)
-        }
-        return acc
-    }
-}
-
-func solvePart2() {
-    let part2Solver = Day1Part2Solution()
-
-    // Tests
-    part2Solver.solve(data: [12]) == 2
-    part2Solver.solve(data: [1969]) == 966
-    part2Solver.solve(data: [100756]) == 50346
-
-    let data = try! FileLoader()
-        .loadFile(named: "day1Input")
-        .compactMap { Int($0) }
-    print("Part 2 Solution: \(part2Solver.solve(data: data))")
-}
-
-solvePart1()
-solvePart2()
-
-
-
-
-
+// Part 2
+let part2Solver = Day1Solver(converter: part2Fuel(to:))
+part2Solver.solve(data: [12]) == 2
+part2Solver.solve(data: [1969]) == 966
+part2Solver.solve(data: [100756]) == 50346
+part2Solver.solve(data: data) == 5056279
+print("Part 2 Solution: \(part2Solver.solve(data: data))")
