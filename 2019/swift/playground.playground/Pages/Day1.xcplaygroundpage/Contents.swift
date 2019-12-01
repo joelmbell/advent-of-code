@@ -31,7 +31,7 @@ struct FileLoader {
     }
 }
 
-struct Day1Solution {
+struct Day1Part1Solution {
     func solve(data: [Int]) -> Int {
         return data.reduce(0) { (acc, next) -> Int in
             return acc + fuel(for: next)
@@ -39,24 +39,66 @@ struct Day1Solution {
     }
 
     private func fuel(for mass: Int) -> Int {
-        return Int(Float(mass) / 3.0) - 2
+        return max(Int(Float(mass) / 3.0) - 2, 0)
     }
 }
 
-let solver = Day1Solution()
+func solvePart1() {
+    let part1Solver = Day1Part1Solution()
 
-// Tests
-solver.solve(data: [12]) == 2
-solver.solve(data: [14]) == 2
-solver.solve(data: [1969]) == 654
-solver.solve(data: [100756]) == 33583
+    // Tests
+    part1Solver.solve(data: [12]) == 2
+    part1Solver.solve(data: [14]) == 2
+    part1Solver.solve(data: [1969]) == 654
+    part1Solver.solve(data: [100756]) == 33583
 
-// Real Solution
-let data = FileLoader()
-    .loadFile(named: "day1Input")
-    .flatMap { Int($0) }
-print(solver.solve(data: data))
 
+    let data = try! FileLoader()
+        .loadFile(named: "day1Input")
+        .compactMap { Int($0) }
+    print("Part 1 Solution: \(part1Solver.solve(data: data))")
+}
+
+
+
+// PART 2
+
+struct Day1Part2Solution {
+    func solve(data: [Int]) -> Int {
+        return data.reduce(0) { (acc, next) -> Int in
+            return acc + fuel(for: next)
+        }
+    }
+
+    private func fuel(for mass: Int) -> Int {
+        let calc = Int(Float(mass) / 3.0) - 2
+        let result = max(calc, 0)
+        var acc: Int = result
+        if result == 0 {
+            return acc
+        } else {
+            acc += fuel(for: result)
+        }
+        return acc
+    }
+}
+
+func solvePart2() {
+    let part2Solver = Day1Part2Solution()
+
+    // Tests
+    part2Solver.solve(data: [12]) == 2
+    part2Solver.solve(data: [1969]) == 966
+    part2Solver.solve(data: [100756]) == 50346
+
+    let data = try! FileLoader()
+        .loadFile(named: "day1Input")
+        .compactMap { Int($0) }
+    print("Part 2 Solution: \(part2Solver.solve(data: data))")
+}
+
+solvePart1()
+solvePart2()
 
 
 
