@@ -59,17 +59,36 @@ struct Interpreter {
 
 
 
-
-
 func solvePart1() -> Int {
     var fileInput = try! FileLoader().loadFile(named: "input")
     fileInput[1] = 12
     fileInput[2] = 2
     Interpreter().interprete(&fileInput)
     return fileInput[0]
+ }
+
+
+
+func solvePart2() -> Int {
+    let interpreter = Interpreter()
+    for noun in 0..<100 {
+        for verb in 0..<100 {
+            var fileInput = try! FileLoader().loadFile(named: "input")
+            fileInput[1] = noun
+            fileInput[2] = verb
+            interpreter.interprete(&fileInput)
+
+            if fileInput[0] == 19690720 {
+                return 100 * noun + verb
+            }
+        }
+    }
+
+    return -1
 }
 
 print("Part 1 solution: \(solvePart1())")
+//print("Part 2 solution: \(solvePart2())")
 
 
 
