@@ -15,14 +15,7 @@ struct PasswordPolicy {
     }
 }
 
-extension Character {
-    init?(_ uint16: UInt16) {
-        guard let scalar = Unicode.Scalar(uint16) else {
-            return nil
-        }
-        self.init(scalar)
-    }
-}
+
 
 struct PasswordData {
     let policy: PasswordPolicy

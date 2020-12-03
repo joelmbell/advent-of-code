@@ -17,3 +17,12 @@ public struct FileLoader {
         return contents.components(separatedBy: "\n")
     }
 }
+
+public extension Character {
+    public init?(_ uint16: UInt16) {
+        guard let scalar = Unicode.Scalar(uint16) else {
+            return nil
+        }
+        self.init(scalar)
+    }
+}
