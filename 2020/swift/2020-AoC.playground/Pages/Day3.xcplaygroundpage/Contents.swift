@@ -5,7 +5,7 @@ let data = try! FileLoader()
     .filter { !$0.isEmpty }
 
 typealias Slope = (x: Int, y: Int)
-func solveForSlope(_ slope: Slope) -> Int {
+func solve(slope: Slope) -> Int {
     var xPos = 0
     var treesEncountered = 0
     for i in stride(from: 0, to: data.count - slope.y, by: slope.y) {
@@ -28,22 +28,24 @@ func solveForSlope(_ slope: Slope) -> Int {
     return treesEncountered
 }
 
-func solvePt1() -> Int {
-   return solveForSlope((3, 1))
-}
-
 func solvePt2() -> Int {
-    [(1, 1), 
-     (3, 1), 
-     (5, 1), 
-     (7, 1), 
+    [(1, 1),
+     (3, 1),
+     (5, 1),
+     (7, 1),
      (1, 2)]
-        .map { solveForSlope($0) }
+        .map { solve(slope: $0) }
         .reduce(1, *)
 }
 
+func solvePt1() -> Int {
+    return solve(slope: (3, 1))
+}
+
+
+
 print(solvePt1())
-print(solvePt2())
+//print(solvePt2())
 
 
 
