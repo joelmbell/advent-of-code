@@ -44,7 +44,7 @@ func solvePt1() -> Int {
 
 
 
-print(solvePt1())
+//print(solvePt1())
 //print(solvePt2())
 
 
