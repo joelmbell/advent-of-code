@@ -2,13 +2,51 @@
 
 import Foundation
 
+let sampleData = try! FileLoader().loadFile(named: "sample")
 let data = try! FileLoader().loadFile(named: "input")
 
-func solveDay2Pt1(input: [String] = data) {
-    
+struct Command {
+    enum Direction: String {
+        case forward
+        case down
+        case up
+    }
+
+    let direction: Direction
+    let amount: Int
+
+    init(val: String) {
+        let vals = val.split(separator: " ").map { String($0) }
+        direction = Direction(rawValue: vals[0])!
+        amount = Int(vals[1])!
+    }
 }
 
-// Test Input
-solveDay2Pt1(input: [])
+func solveDay2Pt1(input: [String]) -> Int {
+    let input = input
+        .filter { !$0.isEmpty }
+        .map { Command(val: $0) }
 
+    var hPos: Int = 0
+    var dPos: Int = 0
 
+    for cmd in input {
+        switch cmd.direction {
+        case .forward:
+            hPos += cmd.amount
+        case .down:
+            dPos += cmd.amount
+        case .up:
+            dPos -= cmd.amount
+        }
+    }
+
+    return hPos * dPos
+}
+
+func solveDay2Pt2(input: [String]) -> String {
+    return "pt2"
+}
+
+Assert(solveDay2Pt1(input: sampleData), 150)
+Assert(solveDay2Pt1(input: data), 1580000)
