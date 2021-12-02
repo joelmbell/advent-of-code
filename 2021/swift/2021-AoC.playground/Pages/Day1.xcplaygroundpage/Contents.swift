@@ -2,28 +2,23 @@
 
 import Foundation
 
+let exampleData =  [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
 let data = try! FileLoader().loadFile(named: "pt1Input")
     .compactMap { Int($0) }
 
-func pt1Solution() {
-    func countLarger(input: [Int]) -> Int {
-        var previousValue: Int? = nil
-        var counter: Int = 0
-        for item in input {
-            if let prev = previousValue {
-                if item > prev {
-                    counter += 1    
-                }
+func pt1Solution(input: [Int]) -> Int {
+    var previousValue: Int? = nil
+    var counter: Int = 0
+    for item in input {
+        if let prev = previousValue {
+            if item > prev {
+                counter += 1    
             }
-            previousValue = item
         }
-        return counter
+        previousValue = item
     }
-    
-    print(countLarger(input: data))
+    return counter
 }
-pt1Solution()
-
 
 func pt2Solution(input: [Int] = data) -> Int {
     var counter = 0
@@ -39,6 +34,8 @@ func pt2Solution(input: [Int] = data) -> Int {
     return counter
 }
 
-// Testcase
-pt2Solution(input: [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]) == 5
-pt2Solution()
+
+Assert(pt1Solution(input: exampleData), 7)
+Assert(pt1Solution(input: data), 1228)
+Assert(pt2Solution(input: exampleData), 5)
+Assert(pt2Solution(input: data), 1257)
