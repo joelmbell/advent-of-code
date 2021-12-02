@@ -44,9 +44,33 @@ func solveDay2Pt1(input: [String]) -> Int {
     return hPos * dPos
 }
 
-func solveDay2Pt2(input: [String]) -> String {
-    return "pt2"
+func solveDay2Pt2(input: [String]) -> Int {
+    let input = input
+        .filter { !$0.isEmpty }
+        .map { Command(val: $0) }
+
+    var hPos: Int = 0
+    var dPos: Int = 0
+    var aim: Int = 0
+
+    for cmd in input {
+        switch cmd.direction {
+        case .forward:
+            hPos += cmd.amount
+            if aim > 0 {
+                dPos += (aim * cmd.amount)
+            }
+        case .down:
+            aim += cmd.amount
+        case .up:
+            aim -= cmd.amount
+        }
+    }
+
+    return hPos * dPos
 }
 
 Assert(solveDay2Pt1(input: sampleData), 150)
 Assert(solveDay2Pt1(input: data), 1580000)
+Assert(solveDay2Pt2(input: sampleData), 900)
+Assert(solveDay2Pt2(input: data), 1251263225)
