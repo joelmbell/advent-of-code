@@ -5,20 +5,24 @@ import Foundation
 let sampleData = try! FileLoader().loadFile(named: "sample")
 let data = try! FileLoader().loadFile(named: "input")
 
-struct Command {
-    enum Direction: String {
-        case forward
-        case down
-        case up
-    }
-
-    let direction: Direction
-    let amount: Int
+enum Command {
+    case forward(Int)
+    case down(Int)
+    case up(Int)
 
     init(val: String) {
         let vals = val.split(separator: " ").map { String($0) }
-        direction = Direction(rawValue: vals[0])!
-        amount = Int(vals[1])!
+        let amount = Int(vals[1])!
+        switch vals[0] {
+        case "forward":
+            self = .forward(amount)
+        case "down":
+            self = .down(amount)
+        case "up":
+            self = .up(amount)
+        default:
+            fatalError("Invalid command: \(val)")
+        }
     }
 }
 
@@ -31,13 +35,13 @@ func solveDay2Pt1(input: [String]) -> Int {
     var dPos: Int = 0
 
     for cmd in input {
-        switch cmd.direction {
-        case .forward:
-            hPos += cmd.amount
-        case .down:
-            dPos += cmd.amount
-        case .up:
-            dPos -= cmd.amount
+        switch cmd {
+        case .forward(let val):
+            hPos += val
+        case .down(let val):
+            dPos += val
+        case .up(let val):
+            dPos -= val
         }
     }
 
@@ -54,16 +58,16 @@ func solveDay2Pt2(input: [String]) -> Int {
     var aim: Int = 0
 
     for cmd in input {
-        switch cmd.direction {
-        case .forward:
-            hPos += cmd.amount
+        switch cmd {
+        case .forward(let val):
+            hPos += val
             if aim > 0 {
-                dPos += (aim * cmd.amount)
+                dPos += (aim * val)
             }
-        case .down:
-            aim += cmd.amount
-        case .up:
-            aim -= cmd.amount
+        case .down(let val):
+            aim += val
+        case .up(let val):
+            aim -= val
         }
     }
 
