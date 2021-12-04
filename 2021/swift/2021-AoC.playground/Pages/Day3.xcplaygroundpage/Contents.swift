@@ -14,7 +14,7 @@ func convertToDecimal(_ input: [Bool]) -> Int {
     return Int(binaryString, radix: 2)!
 }
 
-func solveDay1(data: [String]) -> Int {
+func solveDay1Pt1(data: [String]) -> Int {
     let data = data
         .filter { !$0.isEmpty }
         .map { $0.map { Character("1") == $0 } }
@@ -47,7 +47,52 @@ func solveDay1(data: [String]) -> Int {
     return convertToDecimal(epsilon) * convertToDecimal(gamma)
 }
 
-Assert(solveDay1(data: sampleData), 198)
-Assert(solveDay1(data: data), 4138664)
+func solveDay1Pt2(data: [String]) -> Int {
+    
+    var data = data
+        .filter { !$0.isEmpty }
+        .map { $0.map { Character("1") == $0 } }
+    
+
+    func findRating(in data: [[Bool]], isOxygenRating: Bool) -> [Bool] {
+        var data = data
+        let columns = data.first?.count ?? 0
+        for i in 0..<columns {
+            var onCount = 0
+            var offCount = 0
+            for k in 0..<data.count {
+                if data[k][i] {
+                    onCount += 1
+                } else {
+                    offCount += 1
+                }
+            }
+            
+            data = data.filter { item in
+                if isOxygenRating {
+                    return item[i] == (onCount >= offCount)
+                } else {
+                    return item[i] == (onCount < offCount)
+                }
+            }
+
+            if data.count <= 1 {
+                return data.first!
+            }
+        }
+        
+        fatalError("Unable to find solution")
+    }
+    
+    let oxygen = convertToDecimal(findRating(in: data, isOxygenRating: true))
+    let co2 = convertToDecimal(findRating(in: data, isOxygenRating: false))
+    return oxygen * co2
+}
+
+Assert(solveDay1Pt1(data: sampleData), 198)
+Assert(solveDay1Pt1(data: data), 4138664)
+
+Assert(solveDay1Pt2(data: sampleData), 230)
+Assert(solveDay1Pt2(data: data), 4273224)
 
 //: [Next](@next)
