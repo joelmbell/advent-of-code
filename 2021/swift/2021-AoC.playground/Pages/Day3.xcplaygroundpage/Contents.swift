@@ -6,13 +6,12 @@ let sampleData = try! FileLoader().loadFile(named: "sample")
 let data = try! FileLoader().loadFile(named: "input")
 
 func convertToDecimal(_ input: [Bool]) -> Int {
-    var counter: Int = 0
-    for (idx, val) in input.reversed().enumerated() {
-        if val {
-            counter += Int(pow(Double(2), Double(idx)))
-        }
+    let binaryString = input.reduce(into: "") { partialResult, item in
+        let val = item ? 1 : 0
+        partialResult += "\(val)"
     }
-    return counter
+    
+    return Int(binaryString, radix: 2)!
 }
 
 func solveDay1(data: [String]) -> Int {
