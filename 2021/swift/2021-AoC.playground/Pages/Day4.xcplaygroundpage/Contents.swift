@@ -5,7 +5,7 @@ import Foundation
 let sampleData = try! FileLoader().loadFile(named: "sample")
 let data = try! FileLoader().loadFile(named: "input")
 
-struct Board: CustomStringConvertible {
+struct Board {
     struct Point {
         let number: Int
         var isMarked: Bool
@@ -17,6 +17,7 @@ struct Board: CustomStringConvertible {
     }
     
     private(set) var data: [[Point]] = []
+    private(set) var isWinner: Bool = false
     
     init(rawData: [String]) {
         data = rawData.map { 
@@ -24,10 +25,8 @@ struct Board: CustomStringConvertible {
         }
     }
     
-    
-    var isWinner: Bool {
-        
-        func isWinner(_ points: [Point]) -> Bool {
+    mutating func checkHasOne() -> Bool {
+        func isRowWinner(_ points: [Point]) -> Bool {
             return points.filter { $0.isMarked }.count == points.count
         }
         
@@ -40,12 +39,24 @@ struct Board: CustomStringConvertible {
         
         // Check Rows & Columns
         for i in 0..<data.count {
-            if isWinner(data[i]) || isWinner(rotatedData[i]) {
+            if isRowWinner(data[i]) || isRowWinner(rotatedData[i]) {
+                isWinner = true
                 return true
             }
         }
-               
+        
         return false
+    }
+    
+    var sumUnmarkedNumbers: Int {
+        return self.data.reduce(into: 0) { partialResult, points in
+            let rowSum = points.reduce(into: 0) { pointsResult, point in
+                if !point.isMarked {
+                    pointsResult += point.number
+                }
+            }
+            partialResult += rowSum
+        }
     }
     
     mutating func play(num: Int) {
@@ -57,7 +68,9 @@ struct Board: CustomStringConvertible {
             }
         }
     }
-    
+}
+
+extension Board: CustomStringConvertible {
     var description: String {
         var output: String = "\n"
         for i in 0..<data.count {
@@ -75,22 +88,7 @@ struct Board: CustomStringConvertible {
     }
 }
 
-extension Board {
-    var sumUnmarkedNumbers: Int {
-        return self.data.reduce(into: 0) { partialResult, points in
-            let rowSum = points.reduce(into: 0) { pointsResult, point in
-                if !point.isMarked {
-                    pointsResult += point.number
-                }
-            }
-            partialResult += rowSum
-        }
-    }
-}
-
-
-func solveDay4Part1(data: [String]) -> Int {
-    
+func parseData(_ data: [String]) -> (plays: [Int], boards: [Board]) {
     let plays = data.first!.split(separator: ",").map { Int($0)! }
     
     var boards: [Board] = []
@@ -105,10 +103,17 @@ func solveDay4Part1(data: [String]) -> Int {
         }
     }
     
+    return (plays, boards)
+}
+
+
+func solveDay4Part1(data: [String]) -> Int {
+   var (plays, boards) = parseData(data)
+    
     for play in plays {
         for i in 0..<boards.count {
             boards[i].play(num: play)
-            if boards[i].isWinner {
+            if boards[i].checkHasOne() {
                 return boards[i].sumUnmarkedNumbers * play
             }
         }
@@ -117,7 +122,33 @@ func solveDay4Part1(data: [String]) -> Int {
     fatalError("No winner found")
 }
 
+func solveDay4Part2(data: [String]) -> Int {
+    var (plays, boards) = parseData(data)
+    
+    var wins: Int = 0
+    for play in plays {
+        for i in 0..<boards.count {
+            guard !boards[i].isWinner else {
+                continue
+            }
+            
+            boards[i].play(num: play)
+            
+            if boards[i].checkHasOne() {
+                wins += 1
+                if wins == boards.count {
+                    return boards[i].sumUnmarkedNumbers * play
+                }
+            }
+        }
+    }
+    
+    fatalError("Last winner never found.")
+}
+
 Assert(solveDay4Part1(data: sampleData), 4512)
 Assert(solveDay4Part1(data: data), 89001)
+Assert(solveDay4Part2(data: sampleData), 1924)
+Assert(solveDay4Part2(data: data), 7296)
 
 //: [Next](@next)
