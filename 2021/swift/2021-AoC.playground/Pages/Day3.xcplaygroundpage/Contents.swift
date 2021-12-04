@@ -49,7 +49,7 @@ func solveDay1Pt1(data: [String]) -> Int {
 
 func solveDay1Pt2(data: [String]) -> Int {
     
-    var data = data
+    let data = data
         .filter { !$0.isEmpty }
         .map { $0.map { Character("1") == $0 } }
     
