@@ -5,12 +5,16 @@ import Foundation
 let sampleData = try! FileLoader().loadFile(named: "sample")
 let data = try! FileLoader().loadFile(named: "input")
 
-struct Point: CustomStringConvertible, Hashable {
+struct Point: CustomStringConvertible {
     let x: Int
     let y: Int
     
     var description: String {
         return "(\(x), \(y))"
+    }
+    
+    var uniqueId: String {
+        return "\(x),\(y)"
     }
 }
 
@@ -27,15 +31,20 @@ struct Line: CustomStringConvertible {
         
         self.start = points[0]
         self.end = points[1]
+        insertTime = 0
     }
     
     var description: String {
         return "\(start) - \(end)"
     }
     
-    var points: [Point] {
-        guard start.x == end.x || start.y == end.y else {
-            return []
+    var insertTime: CFAbsoluteTime
+    
+    mutating func drawLine(into map: inout [String: Int]) {
+        func insert(point: Point, into map: inout [String: Int]) {
+            var timer = ParkBenchTimer()
+            map[point.uniqueId] = (map[point.uniqueId] == nil) ? 1 : map[point.uniqueId]! + 1
+            insertTime += timer.stop()
         }
         
         let modifyingX = end.y == start.y
@@ -44,15 +53,17 @@ struct Line: CustomStringConvertible {
         let totalChange = max(abs(changeYBy), abs(changeXBy))
         
         guard totalChange > 0 else {
-            return [start]
+            insert(point: start, into: &map)
+            return
         }
         
         guard totalChange > 1 else {
-            return [start, end]
+            insert(point: start, into: &map)
+            insert(point: end, into: &map)
+            return
         }
         
-        var points: [Point] = [start]
-        for i in 1...totalChange {
+        for i in 0...totalChange {
             let newPoint: Point
             
             if modifyingX {
@@ -62,28 +73,25 @@ struct Line: CustomStringConvertible {
                 let changeVal = (changeYBy < 0) ? start.y - i : start.y + i
                 newPoint = Point(x: start.x, y: changeVal)
             }
-            
-            points.append(newPoint)
+            insert(point: newPoint, into: &map)
         }
-        return points
     }
 }
 
 func solvePt1(_ data: [String]) -> Int {
+    var timer = ParkBenchTimer()
     let lines = data
         .filter { !$0.isEmpty }
         .map { Line(raw: $0) }
     
-    var map: [Point: Int] = [:]
+    var map: [String: Int] = [:]
         
     for line in lines {
-        for point in line.points {
-            if map[point] == nil {
-                map[point] = 1
-            } else {
-                map[point] = map[point]! + 1
-            }
+        var line = line
+        guard line.start.x == line.end.x || line.start.y == line.end.y else {
+            continue
         }
+        line.drawLine(into: &map)
     }
     var count: Int = 0
     for (_, v) in map {
@@ -91,10 +99,35 @@ func solvePt1(_ data: [String]) -> Int {
             count += 1
         }
     }
+    print("insert duration: \(timer.stop())")
+    print("duration: \(timer.stop())")
+    return count
+}
+
+func solvePt2(_ data: [String]) -> Int {
+    var timer = ParkBenchTimer()
+    let lines = data
+        .filter { !$0.isEmpty }
+        .map { Line(raw: $0) }
+    
+    var map: [String: Int] = [:]
+        
+    for line in lines {
+        var line = line
+        line.drawLine(into: &map)
+    }
+    var count: Int = 0
+    for (_, v) in map {
+        if v > 1 {
+            count += 1
+        }
+    }
+    print("duration: \(timer.stop())")
     return count
 }
 
 solvePt1(sampleData) == 5
-solvePt1(data)
+//solvePt1(data) == 5124
+//solvePt2(sampleData) == 12
 
 //: [Next](@next)
