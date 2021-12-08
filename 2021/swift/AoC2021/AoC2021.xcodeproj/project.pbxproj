@@ -45,6 +45,7 @@
 		D3D709B02760733900DAAFA4 /* Day8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day8.swift; sourceTree = "<group>"; };
 		D3D709B22760737100DAAFA4 /* sample.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
 		D3D709B32760737100DAAFA4 /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
+		D3D709B42760854B00DAAFA4 /* joeltest.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = joeltest.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +133,7 @@
 				D3D709B02760733900DAAFA4 /* Day8.swift */,
 				D3D709B32760737100DAAFA4 /* input.txt */,
 				D3D709B22760737100DAAFA4 /* sample.txt */,
+				D3D709B42760854B00DAAFA4 /* joeltest.txt */,
 			);
 			path = Day8;
 			sourceTree = "<group>";
