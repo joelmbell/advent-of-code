@@ -81,6 +81,9 @@ func runDay7() {
     print("pt 1 data: \(solvePt1(data) == 336120)")
 
     print("pt 2 sample: \(solvePt2(sampleData) == 168)")
+    
+    var timer = ParkBenchTimer()
     print("pt 2 data: \(solvePt2(data) == 96864235)")
+    print("\tpt 2 data runtime: \(timer.stop())")
 }
 
