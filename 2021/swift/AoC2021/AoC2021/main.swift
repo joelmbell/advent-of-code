@@ -7,4 +7,5 @@
 
 import Foundation
 
-runDay5()
+// runDay5()
+runDay6()
