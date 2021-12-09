@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD4DE1682761C7EE0002FCD6 /* Day9.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4DE1672761C7EE0002FCD6 /* Day9.swift */; };
 		D3BD1142275FECB500B599F7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BD1141275FECB500B599F7 /* main.swift */; };
 		D3BD1149275FECE100B599F7 /* Day5.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BD1148275FECE100B599F7 /* Day5.swift */; };
 		D3BD114F275FED3800B599F7 /* FileLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BD114E275FED3800B599F7 /* FileLoader.swift */; };
@@ -29,6 +30,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CD4DE1672761C7EE0002FCD6 /* Day9.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day9.swift; sourceTree = "<group>"; };
+		CD4DE1692761C7F30002FCD6 /* sample.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
+		CD4DE16A2761C7F30002FCD6 /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
 		D3BD113E275FECB500B599F7 /* AoC2021 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AoC2021; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3BD1141275FECB500B599F7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D3BD1148275FECE100B599F7 /* Day5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day5.swift; sourceTree = "<group>"; };
@@ -59,6 +63,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD4DE1662761C7DC0002FCD6 /* Day9 */ = {
+			isa = PBXGroup;
+			children = (
+				CD4DE1672761C7EE0002FCD6 /* Day9.swift */,
+				CD4DE16A2761C7F30002FCD6 /* input.txt */,
+				CD4DE1692761C7F30002FCD6 /* sample.txt */,
+			);
+			path = Day9;
+			sourceTree = "<group>";
+		};
 		D3BD1135275FECB500B599F7 = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +97,7 @@
 				D3BD115327601DDC00B599F7 /* Day6 */,
 				D3BD11582760556400B599F7 /* Day7 */,
 				D3D709AF2760730800DAAFA4 /* Day8 */,
+				CD4DE1662761C7DC0002FCD6 /* Day9 */,
 				D3BD1141275FECB500B599F7 /* main.swift */,
 			);
 			path = AoC2021;
@@ -200,6 +215,7 @@
 				D3BD115527601E0400B599F7 /* Day6.swift in Sources */,
 				D3BD1149275FECE100B599F7 /* Day5.swift in Sources */,
 				D3BD1142275FECB500B599F7 /* main.swift in Sources */,
+				CD4DE1682761C7EE0002FCD6 /* Day9.swift in Sources */,
 				D3BD115A2760557300B599F7 /* Day7.swift in Sources */,
 				D3BD1151275FED4100B599F7 /* Helpers.swift in Sources */,
 				D3D709B12760733900DAAFA4 /* Day8.swift in Sources */,

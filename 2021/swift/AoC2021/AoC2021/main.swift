@@ -10,4 +10,5 @@ import Foundation
 //runDay5()
 //runDay6()
 //runDay7()
-runDay8()
+//runDay8()
+runDay9()
