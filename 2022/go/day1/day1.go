@@ -6,6 +6,22 @@ import (
 )
 
 func Part1(data []string) int64 {
+	elvesCalories := getTotalCaloriesForEachElfSorted(data)
+	return elvesCalories[0]
+}
+
+func Part2(data []string) int64 {
+	elvesCalories := getTotalCaloriesForEachElfSorted(data)
+	highest := elvesCalories[0:3]
+
+	var total int64
+	for _, count := range highest {
+		total += count
+	}
+	return total
+}
+
+func getTotalCaloriesForEachElfSorted(data []string) []int64 {
 	elvesCalories := make([]int64, 1)
 	curElf := 0
 	for _, row := range data {
@@ -22,5 +38,6 @@ func Part1(data []string) int64 {
 	sort.Slice(elvesCalories, func(i, j int) bool {
 		return elvesCalories[i] > elvesCalories[j]
 	})
-	return elvesCalories[0]
+
+	return elvesCalories
 }
