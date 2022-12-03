@@ -5,16 +5,12 @@ import (
 	"fmt"
 )
 
-type testableOutput interface {
-	int64 | int | string
-}
-
-type Case[I any, O testableOutput] struct {
+type Case[I any, O comparable] struct {
 	Input  I
 	Output O
 }
 
-func Execute[I any, O testableOutput](cases []Case[I, O], solver func(I) O) error {
+func Execute[I any, O comparable](cases []Case[I, O], solver func(I) O) error {
 	for i, test := range cases {
 		output := solver(test.Input)
 		if output != test.Output {

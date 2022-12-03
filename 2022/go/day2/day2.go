@@ -1,63 +1,13 @@
 package day2
 
 import (
+	ds "2022/datastructures"
 	"strings"
 )
-
-/*
-	first colum
-	A - Rock
-	B - Paper
-	C - Scissors
-
-	second column
-	X - Rock
-	Y - Paper
-	Z - Scissors
-
-	total score
-	- sum of your scores for each round
-		1 - rock
-		2 - paper
-		3 - scissors
-	- Plus outcome of the round
-		0 - lost
-		3 - draw
-		6 - won
-*/
 
 type instruction struct {
 	opponent string
 	me       string
-}
-
-func (r *instruction) didWinPt1() bool {
-	return r.me == "Y" && r.opponent == "A" || r.me == "Z" && r.opponent == "B" || r.me == "X" && r.opponent == "C"
-}
-
-func (r *instruction) didLosePt1() bool {
-	return r.me == "Z" && r.opponent == "A" || r.me == "X" && r.opponent == "B" || r.me == "Y" && r.opponent == "C"
-}
-
-func (r *instruction) scorePt1() int {
-	var score int
-	switch r.me {
-	case "X":
-		score += 1
-	case "Y":
-		score += 2
-	case "Z":
-		score += 3
-	}
-
-	if r.didWinPt1() {
-		score += 6
-	} else if r.didLosePt1() {
-		score += 0
-	} else {
-		score += 3
-	}
-	return score
 }
 
 func parse(input []string) []instruction {
@@ -72,44 +22,38 @@ func parse(input []string) []instruction {
 	return rounds
 }
 
+var pointsForPlay = map[string]int{
+	"A": 1, "B": 2, "C": 3,
+}
+
 func Part1(input []string) int {
-	rounds := parse(input)
+	plays := ds.NewCircularLinkedList("A", "B", "C")
+	playsMap := map[string]string{
+		"X": "A", "Y": "B", "Z": "C",
+	}
 
 	var total int
-	for _, round := range rounds {
-		total += round.scorePt1()
+	for _, round := range parse(input) {
+		me := plays.Find(playsMap[round.me])
+		opponent := plays.Find(round.opponent)
+
+		switch {
+		case me.Next.Value == opponent.Value:
+			total += 0
+		case me.Value == opponent.Value:
+			total += 3
+		case me.Previous.Value == opponent.Value:
+			total += 6
+		}
+
+		total += pointsForPlay[me.Value]
 	}
 
 	return total
 }
 
-func winsTo(input string) string {
-	switch input {
-	case "A":
-		return "B"
-	case "B":
-		return "C"
-	case "C":
-		return "A"
-	default:
-		return ""
-	}
-}
-
-func losesTo(input string) string {
-	switch input {
-	case "A":
-		return "C"
-	case "B":
-		return "A"
-	case "C":
-		return "B"
-	default:
-		return ""
-	}
-}
-
 func Part2(input []string) int {
+	plays := ds.NewCircularLinkedList("A", "B", "C")
 	instructions := parse(input)
 
 	var total int
@@ -117,28 +61,19 @@ func Part2(input []string) int {
 		var play string
 		switch instruction.me {
 		case "X":
-			play = losesTo(instruction.opponent)
+			play = plays.Find(instruction.opponent).Previous.Value
 			total += 0
 		case "Y":
 			play = instruction.opponent
 			total += 3
 		case "Z":
-			play = winsTo(instruction.opponent)
+			play = plays.Find(instruction.opponent).Next.Value
 			total += 6
 		default:
 			panic("invalid instruction")
 		}
-
-		//fmt.Printf("instruction: %v, \tplay: %v\n", instruction, play)
-
-		switch play {
-		case "A":
-			total += 1
-		case "B":
-			total += 2
-		case "C":
-			total += 3
-		}
+		total += pointsForPlay[play]
 	}
+	
 	return total
 }
