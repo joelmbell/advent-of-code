@@ -16,3 +16,14 @@ func TestPart1(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestPart2(t *testing.T) {
+	cases := []test.Case[[]string, int]{
+		{loader.Load("sample.txt"), 70},
+		{loader.Load("input.txt"), 2752},
+	}
+	err := test.Execute(cases, Part2)
+	if err != nil {
+		t.Error(err)
+	}
+}
