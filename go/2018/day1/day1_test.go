@@ -1,43 +1,37 @@
 package day1_2018
 
 import (
+	loader "aoc/dataloader"
+	"aoc/test"
 	"testing"
 )
 
-func TestDay1_01(t *testing.T) {
+func TestPart1(t *testing.T) {
 
-	tests := []struct {
-		input  []int64
-		output int64
-	}{
+	cases := []test.Case[[]int64, int64]{
 		{[]int64{-1, 1}, 0},
 		{[]int64{-5, -4, 9, 5, -4, -3, 5}, 3},
+		{loader.LoadInt("input.txt"), 590},
 	}
 
-	for _, test := range tests {
-		output := Day1_01(test.input)
-		if output != test.output {
-			t.Errorf("%v != %v", output, test.output)
-		}
+	err := test.Execute(cases, Part1)
+	if err != nil {
+		t.Error(err)
 	}
 }
 
-func TestDay1_02(t *testing.T) {
-	tests := []struct {
-		input  []int64
-		output int64
-	}{
+func TestPart2(t *testing.T) {
+	cases := []test.Case[[]int64, int64]{
 		{[]int64{1, -1}, 0},
 		{[]int64{3, 3, 4, -2, -4}, 10},
 		{[]int64{-6, 3, 8, 5, -6}, 5},
 		{[]int64{7, 7, -2, -7, -4}, 14},
+		{loader.LoadInt("input.txt"), 83445},
 	}
 
-	for _, test := range tests {
-		output := Day1_02(test.input)
-		if output != test.output {
-			t.Errorf("%v\n\t%v != %v", test.input, output, test.output)
-		}
+	err := test.Execute(cases, Part2)
+	if err != nil {
+		t.Error(err)
 	}
 }
 

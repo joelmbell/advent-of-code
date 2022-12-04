@@ -1,55 +1,33 @@
 package day2_2018
 
 import (
+	loader "aoc/dataloader"
+	"aoc/test"
 	"testing"
 )
 
 func TestPart1(t *testing.T) {
 
-	tests := []struct {
-		input  []string
-		output int
-	}{
+	cases := []test.Case[[]string, int]{
 		{[]string{"abcdef", "bababc", "abbcde", "abcccd", "aabcdd", "abcdee", "ababab"}, 12},
+		{loader.Load("input.txt"), 3952},
 	}
 
-	for _, test := range tests {
-		result := part1(test.input)
-		if result != test.output {
-			t.Fatalf("%v != %v -- for case: %v", result, test.output, test.input)
-		}
+	err := test.Execute(cases, Part1)
+	if err != nil {
+		t.Error(err)
 	}
 }
 
 func TestPart2(t *testing.T) {
 
-	tests := []struct {
-		input  []string
-		output string
-	}{
+	cases := []test.Case[[]string, string]{
 		{[]string{"abcde", "fghij", "klmno", "pqrst", "fguij", "axcye", "wvxyz"}, "fgij"},
+		{loader.Load("input.txt"), "vtnikorkulbfejvyznqgdxpaw"},
 	}
 
-	for _, test := range tests {
-		result := part2(test.input)
-		if result != test.output {
-			t.Fatalf("%v != %v -- for case: %v", result, test.output, test.input)
-		}
-	}
-}
-
-func TestPart1WithInput(t *testing.T) {
-	result := Part1WithInput()
-
-	if result != 3952 {
-		t.Errorf("Failed: result should be %v", result)
-	}
-}
-
-func TestPart2WithInput(t *testing.T) {
-	result := Part2WithInput()
-
-	if result != "vtnikorkulbfejvyznqgdxpaw" {
-		t.Errorf("Failed: result should be %v", result)
+	err := test.Execute(cases, Part2)
+	if err != nil {
+		t.Error(err)
 	}
 }

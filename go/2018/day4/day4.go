@@ -1,10 +1,6 @@
 package day4_2018
 
 import (
-	"bufio"
-	// "fmt"
-	"log"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -54,24 +50,6 @@ func createEvent(s string) Event {
 	return Event{Time: time, GuardID: guardID, Type: eventType}
 }
 
-func loadData(filename string) []string {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var result []string
-	for scanner.Scan() {
-		string := scanner.Text()
-		result = append(result, string)
-	}
-
-	return result
-}
-
 func Part1(input []string) int {
 	var events []Event
 	for _, item := range input {
@@ -119,9 +97,4 @@ func Part1(input []string) int {
 	}
 
 	return currentID
-}
-
-func Part1WithInput(filename string) int {
-	data := loadData(filename)
-	return Part1(data)
 }

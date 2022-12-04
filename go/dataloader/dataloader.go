@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func Load(filename string) []string {
@@ -13,6 +14,20 @@ func Load(filename string) []string {
 		panic(err)
 	}
 	return data
+}
+
+func LoadInt(filename string) []int64 {
+	data := Load(filename)
+	var output []int64
+	for _, item := range data {
+		num, err := strconv.ParseInt(item, 10, 32)
+		if err != nil {
+			fmt.Printf("cannot convert `%v` to integer", item)
+			panic(err)
+		}
+		output = append(output, num)
+	}
+	return output
 }
 
 func loadData(filename string) ([]string, error) {

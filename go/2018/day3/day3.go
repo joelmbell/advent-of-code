@@ -1,9 +1,6 @@
 package day3_2018
 
 import (
-	"bufio"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -76,24 +73,6 @@ func createClaim(input string) Claim {
 	return Claim{ID: id, Frame: frame}
 }
 
-func loadData(filename string) []string {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var result []string
-	for scanner.Scan() {
-		string := scanner.Text()
-		result = append(result, string)
-	}
-
-	return result
-}
-
 // Part1 solves part one with an arbitrary input
 func Part1(input []string) int {
 	store := make(map[string]Value)
@@ -117,7 +96,6 @@ func Part1(input []string) int {
 	return result
 }
 
-// Part2 solves part 2
 func Part2(input []string) string {
 
 	store := make(map[string]Value)
@@ -147,16 +125,4 @@ func Part2(input []string) string {
 	}
 
 	return "unknown"
-}
-
-// Part1WithInput solves part 1
-func Part1WithInput() int {
-	data := loadData("input.txt")
-	return Part1(data)
-}
-
-// Part2WithInput solves part 2
-func Part2WithInput() string {
-	data := loadData("input.txt")
-	return Part2(data)
 }
