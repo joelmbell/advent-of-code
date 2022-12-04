@@ -1,6 +1,42 @@
 package datastructures
 
-import "testing"
+import (
+	"testing"
+)
+
+func TestSet_UnionBasic(t *testing.T) {
+	a := NewSet([]string{"A", "B", "C"})
+	b := NewSet([]string{"D", "E", "F"})
+	result := a.Union(b)
+
+	expected := NewSet([]string{"A", "B", "C", "D", "E", "F"})
+
+	if !result.Equals(expected) {
+		t.Errorf("result should containa all elements")
+	}
+}
+
+func TestSet_UnionOverlapping(t *testing.T) {
+	a := NewSet([]string{"A", "B", "D", "P"})
+	b := NewSet([]string{"A", "B", "Q"})
+	result := a.Union(b)
+
+	expected := NewSet([]string{"A", "B", "D", "P", "Q"})
+
+	if !result.Equals(expected) {
+		t.Errorf("result should containa all elements")
+	}
+}
+
+func TestSet_UnionCopies(t *testing.T) {
+	a := NewSet([]string{"A", "B", "D", "P"})
+	b := NewSet([]string{"A", "B", "Q"})
+	result := a.Union(b)
+
+	if result.Equals(a) || result.Equals(b) {
+		t.Errorf("Union did not create a new struct")
+	}
+}
 
 func TestSet_IntersectionWithValues(t *testing.T) {
 	a := NewSet([]string{"A", "B", "C"})
