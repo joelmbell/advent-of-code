@@ -45,3 +45,17 @@ func Part1(input []string) int {
 	}
 	return count
 }
+
+func Part2(input []string) int {
+	count := 0
+	for _, row := range input {
+		pair := parse(row)
+		first := ds.NewSet(sliceForRng(pair[0]))
+		second := ds.NewSet(sliceForRng(pair[1]))
+		inter := first.Intersection(second)
+		if len(inter) > 0 {
+			count++
+		}
+	}
+	return count
+}
