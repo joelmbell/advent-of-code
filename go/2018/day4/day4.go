@@ -17,22 +17,20 @@ const (
 
 type Event struct {
 	Time    time.Time
-	GuardID int // -1 if no guardID is available
+	GuardID int // -1 if we don't know yet
 	Type    EventType
 }
 
 type GuardData struct {
-	// ID           int
 	TotalAsleep  time.Duration
-	PerMinAsleep map[int]time.Duration
+	PerMinAsleep map[int]int
 }
 
 func createEvent(s string) Event {
 
 	closeBracketIndex := strings.Index(s, "]")
-	guardID := -1
 	var eventType EventType
-
+	guardID := -1
 	switch {
 	case strings.Index(s, "Guard") != -1:
 		numCharIndex := strings.Index(s, "#")
@@ -41,8 +39,10 @@ func createEvent(s string) Event {
 		eventType = BeginShift
 	case strings.Index(s, "wakes up") != -1:
 		eventType = WakesUp
+		guardID = -1
 	case strings.Index(s, "falls asleep") != -1:
 		eventType = FallsAsleep
+		guardID = -1
 	}
 
 	dateString := s[1:closeBracketIndex]
@@ -50,51 +50,78 @@ func createEvent(s string) Event {
 	return Event{Time: time, GuardID: guardID, Type: eventType}
 }
 
-func Part1(input []string) int {
+func parse(input []string) []Event {
 	var events []Event
 	for _, item := range input {
 		e := createEvent(item)
 		events = append(events, e)
 	}
+	return events
+}
 
+func Part1(input []string) int {
+	events := parse(input)
 	sort.Slice(events, func(i int, j int) bool {
 		return events[i].Time.Before(events[j].Time)
 	})
 
-	// key = guardID
-	store := make(map[int]GuardData)
-
-	currentGuard := -1
-	var fellAsleep time.Time
+	guardGroup := make(map[int][]Event)
+	var current int
 	for _, e := range events {
 		switch e.Type {
 		case BeginShift:
-			currentGuard = e.GuardID
-		case FallsAsleep:
-			fellAsleep = e.Time
-		case WakesUp:
-			durationAsleep := e.Time.Sub(fellAsleep)
-			data := store[currentGuard]
-			newTotalAsleep := data.TotalAsleep + durationAsleep
-			newData := GuardData{TotalAsleep: newTotalAsleep}
+			if _, ok := guardGroup[e.GuardID]; !ok {
+				guardGroup[e.GuardID] = make([]Event, 0)
+			}
+			current = e.GuardID
+		case FallsAsleep, WakesUp:
+			e.GuardID = current
+			guardGroup[current] = append(guardGroup[current], e)
+		}
+	}
 
-			// if day is the same as when you feel asleep
-			// write all the minutes he was asleep
-			// if day is different,
-			// start at beginning of today, and write all the min he was asleep
-
-			store[currentGuard] = newData
+	guardData := make(map[int]GuardData)
+	for guardId, events := range guardGroup {
+		var startSleep time.Time
+		var durationAsleep time.Duration
+		perMinAsleep := make(map[int]int)
+		for _, e := range events {
+			switch e.Type {
+			case FallsAsleep:
+				startSleep = e.Time
+			case WakesUp:
+				durationAsleep += e.Time.Sub(startSleep)
+				for f := startSleep; e.Time.After(f); f = f.Add(60000000000) {
+					if _, ok := perMinAsleep[f.Minute()]; !ok {
+						perMinAsleep[f.Minute()] = 1
+					} else {
+						perMinAsleep[f.Minute()] += 1
+					}
+				}
+			}
+		}
+		guardData[guardId] = GuardData{
+			TotalAsleep:  durationAsleep,
+			PerMinAsleep: perMinAsleep,
 		}
 	}
 
 	var currentID int
 	var currentMax time.Duration
-	for k, v := range store {
-		if v.TotalAsleep > currentMax {
-			currentID = k
-			currentMax = v.TotalAsleep
+	for guardId, data := range guardData {
+		if data.TotalAsleep > currentMax {
+			currentID = guardId
+			currentMax = data.TotalAsleep
 		}
 	}
 
-	return currentID
+	var curHighestMin int
+	var curHighestCount int
+	for k, v := range guardData[currentID].PerMinAsleep {
+		if v > curHighestCount {
+			curHighestMin = k
+			curHighestCount = v
+		}
+	}
+	return currentID * curHighestMin
 }
