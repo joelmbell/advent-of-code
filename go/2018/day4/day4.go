@@ -1,6 +1,7 @@
 package day4_2018
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -59,7 +60,7 @@ func parse(input []string) []Event {
 	return events
 }
 
-func Part1(input []string) int {
+func groupDataByGuards(input []string) map[int]GuardData {
 	events := parse(input)
 	sort.Slice(events, func(i int, j int) bool {
 		return events[i].Time.Before(events[j].Time)
@@ -105,6 +106,11 @@ func Part1(input []string) int {
 			PerMinAsleep: perMinAsleep,
 		}
 	}
+	return guardData
+}
+
+func Part1(input []string) int {
+	guardData := groupDataByGuards(input)
 
 	var currentID int
 	var currentMax time.Duration
@@ -124,4 +130,23 @@ func Part1(input []string) int {
 		}
 	}
 	return currentID * curHighestMin
+}
+
+func Part2(input []string) int {
+	guardData := groupDataByGuards(input)
+
+	maxGuard := -1
+	maxMin := 0
+	maxAmountSlept := 0
+	for guardId, data := range guardData {
+		for min, amountSlept := range data.PerMinAsleep {
+			if amountSlept > maxAmountSlept {
+				maxGuard = guardId
+				maxMin = min
+				maxAmountSlept = amountSlept
+			}
+		}
+	}
+	fmt.Printf("maxGuard: %v, maxMin: %v", maxGuard, maxMin)
+	return maxGuard * maxMin
 }
