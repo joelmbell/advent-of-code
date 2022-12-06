@@ -2,6 +2,7 @@ package day3
 
 import (
 	ds "aoc/datastructures"
+	"aoc/util"
 )
 
 type rucksack struct {
@@ -23,8 +24,8 @@ func newRucksack(input string) rucksack {
 }
 
 func (r *rucksack) FindDupe() rune {
-	a := ds.NewSet(convert(r.comp1()))
-	b := ds.NewSet(convert(r.comp2()))
+	a := ds.NewSet(util.ConvertToRunes(r.comp1()))
+	b := ds.NewSet(util.ConvertToRunes(r.comp2()))
 
 	dupes := a.Intersection(b)
 	var dupe rune
@@ -33,14 +34,6 @@ func (r *rucksack) FindDupe() rune {
 	}
 
 	return dupe
-}
-
-func convert(str string) []rune {
-	var output []rune
-	for _, char := range str {
-		output = append(output, char)
-	}
-	return output
 }
 
 var key = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -65,9 +58,9 @@ func Part1(input []string) int {
 func Part2(input []string) int {
 	total := 0
 	for i := 0; i < len(input); i += 3 {
-		elf1 := ds.NewSet(convert(input[i]))
-		elf2 := ds.NewSet(convert(input[i+1]))
-		elf3 := ds.NewSet(convert(input[i+2]))
+		elf1 := ds.NewSet(util.ConvertToRunes(input[i]))
+		elf2 := ds.NewSet(util.ConvertToRunes(input[i+1]))
+		elf3 := ds.NewSet(util.ConvertToRunes(input[i+2]))
 
 		dupes := elf1.Intersection(elf2).Intersection(elf3)
 		var dupe rune
