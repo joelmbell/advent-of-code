@@ -2,7 +2,6 @@ package day5_2018
 
 import (
 	"aoc/util"
-	"fmt"
 	"strings"
 )
 
@@ -50,9 +49,7 @@ func isPair(a rune, b rune) bool {
 func Part1(input string) int {
 	data := util.ConvertToRunes(input)
 
-	rotations := 0
 	for i := 0; true; {
-		rotations++
 		if len(data) <= i+1 {
 			break
 		}
@@ -68,7 +65,6 @@ func Part1(input string) int {
 			i++
 		}
 	}
-	fmt.Printf("rotations: %v\n", rotations)
 
 	return len(data)
 }
