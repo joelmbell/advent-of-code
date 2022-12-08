@@ -50,8 +50,6 @@ func Part1(input []string) int {
 	filesystem := parseInput(input)
 	filesystem.MoveToRoot()
 
-	//filesystem.Print()
-
 	total := 0
 	filesystem.Traverse(func(node *ds.TreeNode[fs.File], level int) {
 		if !node.Value.IsFolder {
@@ -71,7 +69,6 @@ func Part2(input []string) int {
 
 	filesystem := parseInput(input)
 	filesystem.MoveToRoot()
-	filesystem.Print()
 
 	totalDiskSpace := 70000000
 	updateSize := 30000000
@@ -79,8 +76,6 @@ func Part2(input []string) int {
 
 	availableSpace := totalDiskSpace - usedDiskSpace
 	minNeededSpace := updateSize - availableSpace
-
-	fmt.Printf("min needed: %v", minNeededSpace)
 
 	optionsToDelete := make(map[int]string)
 	filesystem.Traverse(func(node *ds.TreeNode[fs.File], level int) {
@@ -94,7 +89,7 @@ func Part2(input []string) int {
 	})
 
 	min := usedDiskSpace
-	for k, _ := range optionsToDelete {
+	for k := range optionsToDelete {
 		if k < min {
 			min = k
 		}

@@ -51,7 +51,7 @@ func NewCommand(input string) (Command, error) {
 	}
 }
 
-func (fs *Filesystem) Execute(cmd Command, args []string) []File {
+func (fs *Filesystem) Execute(cmd Command, args []string) interface{} {
 	switch cmd {
 	case List:
 		return fs.List()
@@ -65,7 +65,7 @@ func (fs *Filesystem) Execute(cmd Command, args []string) []File {
 			fs.Forward(args[0])
 		}
 
-		return fs.List()
+		return nil
 	}
 	return make([]File, 0)
 }
