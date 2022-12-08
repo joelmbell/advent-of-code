@@ -2,6 +2,7 @@ package day5_2018
 
 import (
 	"aoc/util"
+	"fmt"
 	"strings"
 )
 
@@ -21,7 +22,15 @@ func delete(s []rune, index int, count int) []rune {
 var lowercase = util.ConvertToRunes("abcdefghijklmnopqrstuvwxyz")
 var uppercase = util.ConvertToRunes("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+var matchingCharacters = make(map[rune]rune)
+
 func isPair(a rune, b rune) bool {
+	if compare, ok := matchingCharacters[a]; ok {
+		if compare == b {
+			return true
+		}
+	}
+
 	index := find(lowercase, a)
 	var pair rune
 	if index == -1 {
@@ -30,13 +39,20 @@ func isPair(a rune, b rune) bool {
 	} else {
 		pair = uppercase[index]
 	}
-	return b == pair || a == pair
+	isPair := b == pair || a == pair
+	if isPair {
+		matchingCharacters[a] = b
+		matchingCharacters[b] = a
+	}
+	return isPair
 }
 
 func Part1(input string) int {
 	data := util.ConvertToRunes(input)
 
+	rotations := 0
 	for i := 0; true; {
+		rotations++
 		if len(data) <= i+1 {
 			break
 		}
@@ -49,15 +65,10 @@ func Part1(input string) int {
 				i--
 			}
 		} else {
-			//if len(data) > i+2 {
-			//	if !isPair(data[i+1], data[i+2]) {
-			//		i += 2
-			//		continue
-			//	}
-			//}
 			i++
 		}
 	}
+	fmt.Printf("rotations: %v\n", rotations)
 
 	return len(data)
 }
