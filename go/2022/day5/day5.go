@@ -1,7 +1,6 @@
 package day5
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -22,28 +21,6 @@ func Reverse[S ~[]E, E any](s S) {
 	}
 }
 
-func sampleStacks() []Stack[string] {
-	return []Stack[string]{
-		{"Z", "N"},
-		{"M", "C", "D"},
-		{"P"},
-	}
-}
-
-func inputStacks() []Stack[string] {
-	return []Stack[string]{
-		{"B", "W", "N"},
-		{"L", "Z", "S", "P", "T", "D", "M", "B"},
-		{"Q", "H", "Z", "W", "R"},
-		{"W", "D", "V", "J", "Z", "R"},
-		{"S", "H", "M", "B"},
-		{"L", "G", "N", "J", "H", "V", "P", "B"},
-		{"J", "Q", "Z", "F", "H", "D", "L", "S"},
-		{"W", "S", "F", "J", "G", "Q", "B"},
-		{"Z", "W", "M", "S", "C", "D", "J"},
-	}
-}
-
 type instruction struct {
 	from  int
 	to    int
@@ -51,7 +28,27 @@ type instruction struct {
 }
 
 func parseStacks(s []string) []Stack[string] {
-	return inputStacks()
+	stackCountRow := s[len(s)-1]
+	numOfStacks, _ := strconv.Atoi(stackCountRow[len(stackCountRow)-1:])
+	stackData := s[0 : len(s)-1]
+
+	stacks := make([]Stack[string], numOfStacks)
+	for _, row := range stackData {
+		curStack := 0
+		for i := 1; i < len(row); i += 4 {
+			char := row[i : i+1]
+			if char != " " {
+				stacks[curStack] = append(stacks[curStack], char)
+			}
+			curStack++
+		}
+	}
+
+	for _, stack := range stacks {
+		Reverse(stack)
+	}
+
+	return stacks
 }
 
 func parseInstruction(s string) instruction {
@@ -70,22 +67,27 @@ func parseInstruction(s string) instruction {
 }
 
 func parseInput(input []string) (stacks []Stack[string], instructions []instruction) {
-	emptyFound := false
+
 	stackData := make([]string, 0)
 	instructions = make([]instruction, 0)
-	for _, line := range input {
+
+	emptyFound := false
+	for i := 0; i < len(input); i++ {
+		line := input[i]
 		if line == "" {
 			emptyFound = true
 			continue
 		}
 
-		stackData = append(stackData, line)
-
-		if emptyFound == false {
-			continue
+		if !emptyFound {
+			stackData = append(stackData, line)
 		}
-		instructions = append(instructions, parseInstruction(line))
+
+		if emptyFound == true {
+			instructions = append(instructions, parseInstruction(line))
+		}
 	}
+
 	return parseStacks(stackData), instructions
 }
 
@@ -129,6 +131,4 @@ func Part2(input []string) string {
 		result += pop
 	}
 	return result
-	fmt.Printf("%v %v", stacks, instructions)
-	return ""
 }
