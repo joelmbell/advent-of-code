@@ -12,6 +12,11 @@ func NewSet[T comparable](slice []T) Set[T] {
 	return set
 }
 
+func (s Set[T]) Add(value T) Set[T] {
+	s[value] = struct{}{}
+	return s
+}
+
 func (s Set[T]) Equals(input Set[T]) bool {
 	return reflect.DeepEqual(s, input)
 }
