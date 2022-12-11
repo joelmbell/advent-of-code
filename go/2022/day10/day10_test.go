@@ -17,14 +17,13 @@ func TestPart1(t *testing.T) {
 	}
 }
 
-//
-//func TestPart2(t *testing.T) {
-//	cases := []test.Case[[]string, int]{
-//		{loader.Load("sample.txt"), 1},
-//		{loader.Load("input.txt"), 2516},
-//	}
-//	err := test.Execute(cases, Part2)
-//	if err != nil {
-//		t.Error(err)
-//	}
-//}
+func TestPart2(t *testing.T) {
+	cases := []test.Case[[]string, string]{
+		{loader.Load("sample.txt"), ""}, // output is visual
+		{loader.Load("input.txt"), ""},  // output is visual (RLEZFLGE)
+	}
+	err := test.Execute(cases, Part2)
+	if err != nil {
+		t.Error(err)
+	}
+}

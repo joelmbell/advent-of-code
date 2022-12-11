@@ -1,6 +1,7 @@
 package day10
 
 import (
+	"aoc/util"
 	"fmt"
 	"strconv"
 	"strings"
@@ -80,4 +81,60 @@ func Part1(input []string) int {
 	}
 
 	return signalStrength
+}
+
+const (
+	CRTWidth   int = 40
+	CRTHeight  int = 6
+	SpriteSize int = 3
+)
+
+func Part2(input []string) string {
+	instructions := parse(input)
+	currentInstruction := 0
+	instructionCycleCount := 1
+	xRegister := 1
+	pixels := make([]string, 0)
+	for c := 1; ; c++ {
+		if len(instructions) <= currentInstruction {
+			break
+		}
+
+		toDrawX := (c - 1) % 40
+		toDrawY := int(float64(c-1) / float64(CRTWidth))
+		if len(pixels) <= toDrawY {
+			pixels = append(pixels, "")
+		}
+		pixel := "."
+		if util.Abs(xRegister-toDrawX) <= 1 {
+			pixel = "#"
+		}
+
+		pixels[toDrawY] += pixel
+
+		inst := instructions[currentInstruction]
+		if instructionCycleCount == inst.cycles {
+			currentInstruction++
+			switch inst.name {
+			case Noop:
+				// noop
+			case Addx:
+				toAdd, _ := strconv.Atoi(inst.args[0])
+				xRegister += toAdd
+			}
+			instructionCycleCount = 1
+		} else {
+			instructionCycleCount++
+		}
+	}
+	draw(pixels)
+	return ""
+}
+
+func draw(input []string) {
+	fmt.Printf("\n\n")
+	for i := 0; i < len(input); i++ {
+		fmt.Printf("%v\n", input[i])
+	}
+	fmt.Printf("\n\n")
 }
