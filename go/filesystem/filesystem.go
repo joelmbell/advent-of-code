@@ -138,7 +138,7 @@ func (fs *Filesystem) Size(file string) int {
 
 	size := 0
 	if nodeToIterate != nil {
-		nodeToIterate.Iterate(func(node *ds.TreeNode[File], level int) {
+		nodeToIterate.Iterate(func(node *ds.TreeNode[File], level int, isLast bool) {
 			size += node.Value.Size
 		}, 0)
 	}
@@ -148,7 +148,7 @@ func (fs *Filesystem) Size(file string) int {
 
 func (fs *Filesystem) Traverse(iterator func(node *ds.TreeNode[File], level int)) {
 	start := fs.Current
-	fs.Current.Iterate(func(node *ds.TreeNode[File], level int) {
+	fs.Current.Iterate(func(node *ds.TreeNode[File], level int, isLast bool) {
 		fs.Current = node
 		iterator(node, level)
 	}, 0)

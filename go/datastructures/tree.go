@@ -43,8 +43,8 @@ func (n *TreeNode[T]) FindChild(value T) *TreeNode[T] {
 	return nil
 }
 
-func (n *TreeNode[T]) Iterate(iterator func(*TreeNode[T], int), level int) {
-	iterator(n, level)
+func (n *TreeNode[T]) Iterate(iterator func(node *TreeNode[T], level int, isLast bool), level int) {
+	iterator(n, level, len(n.Children) <= 0)
 
 	if len(n.Children) <= 0 {
 		return
