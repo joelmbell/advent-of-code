@@ -1,6 +1,7 @@
 package day11
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -111,17 +112,19 @@ func parse(input []string) []*monkey {
 	return monkeys
 }
 
-func (m *monkey) inspect(shouldDivideBy3 bool) (throwTo int, worryLevel int) {
-	toInspect := m.items[0]
-	worryLevel = m.operation.apply(toInspect)
+func (m *monkey) inspect(shouldDivideBy3 bool, cycleLength int) (throwTo int, worryLevel int) {
+	inspect := m.items[0]
+	opapply := m.operation.apply(inspect)
 	if shouldDivideBy3 {
-		worryLevel = int(float64(worryLevel) / float64(3))
+		opapply = int(float64(opapply) / float64(3))
 	}
-	if worryLevel%m.testDivisor == 0 {
-		throwTo = m.passToMonkey
-	} else {
+	reduce := opapply % cycleLength
+	worryLevel = reduce
+	throwTo = m.passToMonkey
+	if worryLevel%m.testDivisor != 0 {
 		throwTo = m.failToMonkey
 	}
+	//fmt.Printf("\t inspect: %v, apply: %v, reduce: %v passTo: %v\n", inspect, opapply, reduce, throwTo)
 	m.items = m.items[1:]
 	m.inspectedCount += 1
 	return
@@ -129,14 +132,19 @@ func (m *monkey) inspect(shouldDivideBy3 bool) (throwTo int, worryLevel int) {
 
 func Part1(input []string) int {
 	monkeys := parse(input)
-
+	cycleLength := calcCycleLength(monkeys)
 	for i := 0; i < 20; i++ {
 		for _, monkey := range monkeys {
 			for len(monkey.items) > 0 {
-				throwTo, worryLevel := monkey.inspect(true)
+				throwTo, worryLevel := monkey.inspect(true, cycleLength)
 				monkeys[throwTo].items = append(monkeys[throwTo].items, worryLevel)
 			}
 		}
+	}
+
+	fmt.Printf("\n\n== RESULT ==\n")
+	for idx, monkey := range monkeys {
+		fmt.Printf("%v inspected: %v\n", idx, monkey.inspectedCount)
 	}
 
 	sort.Slice(monkeys, func(i, j int) bool {
@@ -146,16 +154,34 @@ func Part1(input []string) int {
 	return monkeys[0].inspectedCount * monkeys[1].inspectedCount
 }
 
+func calcCycleLength(monkeys []*monkey) int {
+	cycleLength := 1
+	for _, monkey := range monkeys {
+		cycleLength *= monkey.testDivisor
+	}
+	return cycleLength
+}
+
 func Part2(input []string) int {
 	monkeys := parse(input)
+	cycleLength := calcCycleLength(monkeys)
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10000; i++ {
 		for _, monkey := range monkeys {
 			for len(monkey.items) > 0 {
-				throwTo, worryLevel := monkey.inspect(false)
+				throwTo, worryLevel := monkey.inspect(false, cycleLength)
 				monkeys[throwTo].items = append(monkeys[throwTo].items, worryLevel)
 			}
 		}
+		// Print for debugging
+		//round := i + 1
+		//if round != 0 && (round == 1 || round == 20 || round%1000 == 0) {
+		//	fmt.Printf("\n== After round %v ==\n\n", round)
+		//	for idx, monkey := range monkeys {
+		//		fmt.Printf("monkey %v inspected %v times\n", idx, monkey.inspectedCount)
+		//	}
+		//	fmt.Printf("\n")
+		//}
 	}
 
 	sort.Slice(monkeys, func(i, j int) bool {
